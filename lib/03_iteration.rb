@@ -146,6 +146,10 @@ end
 
 class Array
   def my_each(&prc)
+    self.length.times do |i|
+      yield(self[i])
+    end
+    self
   end
 end
 
@@ -164,12 +168,21 @@ end
 
 class Array
   def my_map(&prc)
+    arr = []
+    self.my_each { |el| arr << yield(el) }
+    arr
   end
 
   def my_select(&prc)
+    arr = []
+    self.my_each { |el| arr << el if yield(el) }
+    arr
   end
 
   def my_inject(&blk)
+    accumulator = self.shift
+    self.my_each { |el| accumulator = yield(accumulator, el) }
+    accumulator
   end
 end
 
@@ -183,4 +196,5 @@ end
 # ```
 
 def concatenate(strings)
+  strings.inject { |accumulator, string| accumulator += string }
 end
