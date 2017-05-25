@@ -3,7 +3,8 @@
 # Write a method `factors(num)` that returns an array containing all the
 # factors of a given number.
 
-def factors(num)
+def factors(number)
+  (1..number).select {|n| number % n == 0}
 end
 
 # ### Bubble Sort
@@ -47,9 +48,46 @@ end
 
 class Array
   def bubble_sort!
+    i = 0
+    if !block_given?
+
+      until i > self.length - 2
+        el = self[i]
+        next_el = self[i+1]
+        if self[i] > self[i+1]
+          self[i] = next_el
+          self[i+1] = el
+          i = 0
+
+        else
+          i += 1
+        end
+      end
+
+      self
+    else
+
+      until i > self.length - 2
+        el = self[i]
+        next_el = self[i+1]
+        if self[i] > self[i+1]
+          num1 <=> num2
+          self[i] = next_el
+          self[i+1] = el
+          i = 0
+
+        else
+          i += 1
+        end
+      end
+
+      self
+    end
+
   end
 
   def bubble_sort(&prc)
+    self.dup.bubble_sort!(&prc)
   end
 end
 
