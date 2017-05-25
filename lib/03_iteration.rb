@@ -1,3 +1,4 @@
+require "byebug"
 # ### Factors
 #
 # Write a method `factors(num)` that returns an array containing all the
@@ -47,49 +48,37 @@ end
 # http://stackoverflow.com/questions/827649/what-is-the-ruby-spaceship-operator
 
 class Array
-  def bubble_sort!
+  def bubble_sort!(&prc)
     i = 0
-    if !block_given?
+    sorted = false
 
-      until i > self.length - 2
-        el = self[i]
-        next_el = self[i+1]
-        if self[i] > self[i+1]
-          self[i] = next_el
-          self[i+1] = el
-          i = 0
-
+    until sorted
+      sorted = true
+      each_index do |i|
+        j = i + 1
+        break if j == self.length
+        if block_given?
+          if yield(self[i], self[j]) == 1
+            sorted = false
+            self[i], self[j] = self[j], self[i]
+          end
         else
-          i += 1
+          if (self[i] <=> self[j]) == 1
+            sorted = false
+            self[i], self[j] = self[j], self[i]
+          end
         end
       end
-
-      self
-    else
-
-      until i > self.length - 2
-        el = self[i]
-        next_el = self[i+1]
-        if self[i] > self[i+1]
-          num1 <=> num2
-          self[i] = next_el
-          self[i+1] = el
-          i = 0
-
-        else
-          i += 1
-        end
-      end
-
-      self
     end
-
+    self
   end
 
   def bubble_sort(&prc)
     self.dup.bubble_sort!(&prc)
   end
+
 end
+
 
 # ### Substrings and Subwords
 #
@@ -105,16 +94,31 @@ end
 # words).
 
 def substrings(string)
+  arr = []
+  i = 0
+  while i < string.length
+    j = 0
+    while j < string.length
+      arr << string[i..j] unless string[i..j] == ""
+      j += 1
+    end
+    i += 1
+  end
+
+  arr
 end
 
 def subwords(word, dictionary)
+  substrings(word).select { |w| dictionary.include?(w) }.uniq
 end
+
 
 # ### Doubler
 # Write a `doubler` method that takes an array of integers and returns an
 # array with the original elements multiplied by two.
 
 def doubler(array)
+  array.map { |i| i * 2 }
 end
 
 # ### My Each
